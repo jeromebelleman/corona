@@ -49,7 +49,10 @@ def main():
     plt.grid(which='minor')
     plt.minorticks_on()
     for country in data:
-        plt.semilogy(dates, data[country], label=country)
+        if cfg['log']:
+            plt.semilogy(dates, data[country], label=country)
+        else:
+            plt.plot(dates, data[country], label=country)
     plt.legend()
     plt.savefig(os.path.expanduser(cfg['out']))
 
