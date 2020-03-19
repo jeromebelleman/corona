@@ -49,7 +49,7 @@ def main():
     fig, axs = plt.subplots()
     axs.xaxis.set_major_locator(mdates.WeekdayLocator())
     axs.xaxis.set_minor_locator(mdates.DayLocator())
-    axs.xaxis.set_major_formatter(mdates.DateFormatter('%d %b'))
+    axs.xaxis.set_major_formatter(mdates.DateFormatter(cfg['dateformat']))
     plt.grid(which='major')
     plt.grid(which='minor', linewidth=.5)
     for country in data:
