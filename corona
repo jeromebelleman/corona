@@ -23,7 +23,8 @@ def main():
         cfg = yaml.load(fhl)
 
     # Update data
-    subprocess.call(['git', 'pull'], cwd=f"{path}/{cfg['directory']}")
+    if 'pull' not in cfg or cfg['pull']:
+        subprocess.call(['git', 'pull'], cwd=f"{path}/{cfg['directory']}")
 
     # Load data
     countries = set(cfg['countries'])
