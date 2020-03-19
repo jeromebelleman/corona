@@ -10,6 +10,7 @@ import subprocess
 import datetime
 import csv
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 import yaml
 
 def main():
@@ -45,16 +46,19 @@ def main():
                     data[line[1]] = line[4:]
 
     # Plot
-    plt.xticks(rotation=20)
-    plt.grid(which='major', linewidth=2)
-    plt.grid(which='minor')
-    plt.minorticks_on()
+    fig, axs = plt.subplots()
+    axs.xaxis.set_major_locator(mdates.WeekdayLocator())
+    axs.xaxis.set_minor_locator(mdates.DayLocator())
+    axs.xaxis.set_major_formatter(mdates.DateFormatter('%d %b'))
+    plt.grid(which='major')
+    plt.grid(which='minor', linewidth=.5)
     for country in data:
-        if cfg['log']:
-            plt.semilogy(dates, data[country], label=country)
+        if 'log' in cfg and cfg['log']:
+            axs.semilogy(dates, data[country], label=country)
         else:
-            plt.plot(dates, data[country], label=country)
+            axs.plot(dates, data[country], label=country)
     plt.legend()
+    fig.autofmt_xdate()
     plt.savefig(os.path.expanduser(cfg['out']))
 
 
