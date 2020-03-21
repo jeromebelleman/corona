@@ -14,6 +14,26 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import yaml
 
+def mkplot(cfg, dates, data):
+    '''
+    Make plot
+    '''
+
+    fig, axs = plt.subplots(1, 2, figsize=(16, 9))
+    for axes, plot in zip(axs, ('plot', 'semilogy')):
+        for country in data:
+            getattr(axes, plot)(dates, data[country], label=country)
+        axes.grid(which='major')
+        axes.grid(which='minor', linewidth=.5)
+        axes.xaxis.set_major_locator(mdates.WeekdayLocator())
+        axes.xaxis.set_minor_locator(mdates.DayLocator())
+        axes.xaxis.set_major_formatter(mdates.DateFormatter(cfg['dateformat']))
+        axes.legend()
+    fig.autofmt_xdate()
+
+    res = cfg['resolution'] if 'resolution' in cfg else None
+    plt.savefig(os.path.expanduser(cfg['out']), dpi=res)
+
 def main():
     '''
     Run
@@ -53,21 +73,7 @@ def main():
                     data[line[1]] = line[4:]
 
     # Plot
-    fig, axs = plt.subplots(1, 2, figsize=(16, 9))
-    for axis, plot in zip(axs, ('plot', 'semilogy')):
-        for country in data:
-            getattr(axis, plot)(dates, data[country], label=country)
-            axis.grid(which='major')
-            axis.grid(which='minor', linewidth=.5)
-            axis.xaxis.set_major_locator(mdates.WeekdayLocator())
-            axis.xaxis.set_minor_locator(mdates.DayLocator())
-            axis.xaxis.set_major_formatter(mdates.DateFormatter(cfg['dateformat']))
-            axis.legend()
-    fig.autofmt_xdate()
-
-    res = cfg['resolution'] if 'resolution' in cfg else None
-    plt.savefig(os.path.expanduser(cfg['out']), dpi=res)
-
+    mkplot(cfg, dates, data)
 
 if __name__ == '__main__':
     sys.exit(main())
