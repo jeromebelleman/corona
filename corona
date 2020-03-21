@@ -25,7 +25,8 @@ def main():
 
     # Update data
     if 'pull' not in cfg or cfg['pull']:
-        subprocess.call(['git', 'pull'], cwd=f"{path}/{cfg['directory']}")
+        subprocess.check_call(['git', 'pull'],
+                              cwd=f"{path}/{cfg['directory']}")
 
     # Load data
     countries = set(cfg['countries'])
