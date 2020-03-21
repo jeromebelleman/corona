@@ -32,7 +32,7 @@ def mkplot(cfg, dates, data):
     fig.autofmt_xdate()
 
     res = cfg['resolution'] if 'resolution' in cfg else None
-    plt.savefig(os.path.expanduser(cfg['out']), dpi=res)
+    plt.savefig(os.path.expanduser(cfg['out']), dpi=res, bbox_inches='tight')
 
 def main():
     '''
