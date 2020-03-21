@@ -53,20 +53,20 @@ def main():
                     data[line[1]] = line[4:]
 
     # Plot
-    fig, axs = plt.subplots()
-    axs.xaxis.set_major_locator(mdates.WeekdayLocator())
-    axs.xaxis.set_minor_locator(mdates.DayLocator())
-    axs.xaxis.set_major_formatter(mdates.DateFormatter(cfg['dateformat']))
-    plt.grid(which='major')
-    plt.grid(which='minor', linewidth=.5)
-    for country in data:
-        if 'log' in cfg and cfg['log']:
-            axs.semilogy(dates, data[country], label=country)
-        else:
-            axs.plot(dates, data[country], label=country)
-    plt.legend()
+    fig, axs = plt.subplots(1, 2, figsize=(16, 9))
+    for axis, plot in zip(axs, ('plot', 'semilogy')):
+        for country in data:
+            getattr(axis, plot)(dates, data[country], label=country)
+            axis.grid(which='major')
+            axis.grid(which='minor', linewidth=.5)
+            axis.xaxis.set_major_locator(mdates.WeekdayLocator())
+            axis.xaxis.set_minor_locator(mdates.DayLocator())
+            axis.xaxis.set_major_formatter(mdates.DateFormatter(cfg['dateformat']))
+            axis.legend()
     fig.autofmt_xdate()
-    plt.savefig(os.path.expanduser(cfg['out']), dpi=cfg['resolution'])
+
+    res = cfg['resolution'] if 'resolution' in cfg else None
+    plt.savefig(os.path.expanduser(cfg['out']), dpi=res)
 
 
 if __name__ == '__main__':
