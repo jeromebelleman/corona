@@ -9,6 +9,7 @@ import sys
 import subprocess
 import datetime
 import csv
+import argparse
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import yaml
@@ -18,13 +19,18 @@ def main():
     Run
     '''
 
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('-l', '--local', action='store_true',
+                        help="don't git pull")
+    args = parser.parse_args()
+
     # Load config
     path = os.path.expanduser('~/.corona')
     with open(f'{path}/corona.yaml') as fhl:
         cfg = yaml.load(fhl)
 
     # Update data
-    if 'pull' not in cfg or cfg['pull']:
+    if not args.local:
         subprocess.check_call(['git', 'pull'],
                               cwd=f"{path}/{cfg['directory']}")
 
