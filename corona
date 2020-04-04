@@ -48,17 +48,19 @@ def main():
     path = os.path.expanduser('~/.corona')
     with open(f'{path}/corona.yaml') as fhl:
         cfg = yaml.load(fhl)
+    directory = os.path.basename(cfg['repository'])
 
     # Update data
-    if not args.local:
-        subprocess.check_call(['git', 'pull'],
-                              cwd=f"{path}/{cfg['directory']}")
+    if not os.path.lexists(f'{path}/{directory}'):
+        subprocess.check_call(['git', 'clone', cfg['repository']], cwd=path)
+    elif not args.local:
+        subprocess.check_call(['git', 'pull'], cwd=f"{path}/{directory}")
 
     # Load data
     countries = set(cfg['countries'])
     data = {}
     first = True
-    with open(f"{path}/{cfg['directory']}/{cfg['file']}") as fhl:
+    with open(f"{path}/{directory}/{cfg['file']}") as fhl:
         for line in csv.reader(fhl):
             if first:
                 dates = [datetime.datetime.strptime(day, '%m/%d/%y')
