@@ -53,8 +53,12 @@ def loadconfig(path):
     cfg['resolution'] = 150
 
     # Overwrite defaults
-    with open(path) as fhl:
-        cfg.update(yaml.load(fhl))
+    try:
+        with open(path) as fhl:
+            cfg.update(yaml.load(fhl))
+    except FileNotFoundError:
+        with open(path, 'w') as fhl:
+            yaml.dump(cfg, fhl, default_flow_style=False)
 
     return cfg
 
