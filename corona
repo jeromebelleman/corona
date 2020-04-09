@@ -53,11 +53,12 @@ def loadconfig(path):
     cfg['resolution'] = 150
 
     # Overwrite defaults
+    os.makedirs(path, exist_ok=True)
     try:
-        with open(path) as fhl:
+        with open(f'{path}/corona.yaml') as fhl:
             cfg.update(yaml.load(fhl))
     except FileNotFoundError:
-        with open(path, 'w') as fhl:
+        with open(f'{path}/corona.yaml', 'w') as fhl:
             yaml.dump(cfg, fhl, default_flow_style=False)
 
     return cfg
@@ -75,7 +76,7 @@ def main():
 
     # Load config
     path = os.path.expanduser('~/.corona')
-    cfg = loadconfig(f'{path}/corona.yaml')
+    cfg = loadconfig(path)
     directory = os.path.basename(cfg['repository'])
 
     # Update data
